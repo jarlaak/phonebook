@@ -1,7 +1,9 @@
 require 'sinatra'
 require_relative 'phonebook'
+require_relative 'database'
 
-phonebook = PhoneBook.new
+database = Database.new
+phonebook = PhoneBook.new(database)
 
 get '/phonebook/person/search/' do
     return_json(phonebook.search_persons([]))

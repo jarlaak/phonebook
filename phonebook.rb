@@ -2,14 +2,12 @@
 require 'json'
 
 class PhoneBook
-    def initialize()
-        @persons = {1=>{"firstname" => "Matti", "lastname" => "Meikäläinen"}, 2 => {"firstname" => "Maija", "lastname"=>"Meikäläinen"}}
+    def initialize(database)
+        @database = database
     end
 
     def get_person(id)
-        json = "{}"
-        json = JSON.generate(@persons[id.to_i]) if @persons.has_key?(id.to_i)
-        json
+        json = JSON.generate(@database.get_person(id.to_i))
     end
 
     def add_person(json)
@@ -17,29 +15,15 @@ class PhoneBook
         begin
             person = JSON.parse(json)
             return 0 unless check_mandatory_fields(person)
-            id = next_index
-            @persons[id]=person
+            id = @database.add_person(person)
         rescue
         end
-        id
+        return id
     end
 
     def search_persons(criterias)
-        persons = @persons
-        criterias.each do |criteria|
-            persons = persons.select do |key,value|
-                found = value.has_key?(criteria[:name])
-                if (found )
-                    found = value[criteria[:name]] == criteria[:criteria]
-                end
-                found
-            end
-        end
+        persons = @database.search_persons(criterias)
         JSON.generate(persons)
-    end
-
-    def next_index
-        max = @persons.map { |id,hash| id }.max + 1
     end
 
     def check_mandatory_fields(hash)

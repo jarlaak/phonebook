@@ -7,9 +7,12 @@ class PhoneBook
     end
 
     def get_person(id)
-        json = JSON.generate(@database.get_person(id.to_i))
+        JSON.generate(@database.get_person(id.to_i))
     end
 
+    def get_all_persons
+        JSON.generate(@database.get_all_persons)
+    end
     def add_person(json)
         id=0
         begin

@@ -6,7 +6,7 @@ database = Database.new
 phonebook = PhoneBook.new(database)
 
 get '/phonebook/person/search/' do
-    return_json(phonebook.search_persons([]))
+    return_json(phonebook.get_all_persons)
 end
 
 get '/phonebook/person/search/:criterias' do

@@ -4,7 +4,6 @@ require 'pg'
 class Database
     def initialize()
         @connection = PG::Connection.new(:dbname => "phonebook")
-        @persons = {1=>{"firstname" => "Matti", "lastname" => "Meikäläinen"}, 2 => {"firstname" => "Maija", "lastname"=>"Meikäläinen"}}
     end
 
     def get_person(id)
@@ -14,7 +13,7 @@ class Database
 
     def result_to_hash(res)
         if ( !res.nil? )
-            {"firstname"=>res["first_name"], "lastname"=>res["last_name"], "phonebumber"=>res["phone_number"]}
+            {"firstname"=>res["first_name"], "lastname"=>res["last_name"], "phonenumber"=>res["phone_number"]}
         else
             {}
         end
@@ -31,8 +30,12 @@ class Database
     
     def add_person(person)
         id = next_index
-        @persons[id]=person
-        return id
+        begin
+            @connection.exec_params("INSERT INTO phonebook (person_id,first_name,last_name,phone_number) VALUES ($1,$2,$3,$4)",[id,person["firstname"],person["lastname"],person["phonenumber"]])
+        rescue
+            id = 0
+        end
+        return {"id"=>id}
     end
 
     def get_all_persons
@@ -65,12 +68,14 @@ class Database
                 add_and = " AND"
             end
         end
-        res=@connection.exec_params(search,params)
+        res={}
+        res=@connection.exec_params(search,params) if params != []
         return rows_to_hash(res)
     end
 
     def next_index
-        max = @persons.map { |id,hash| id }.max + 1
+        res=@connection.exec_params("SELECT MAX(person_id) FROM phonebook")
+        max = (res[0]["max"]).to_i + 1
     end
 
     def escape(str)

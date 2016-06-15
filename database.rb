@@ -13,9 +13,19 @@ class Database
 
     def result_to_hash(res)
         if ( !res.nil? )
-            {"firstname"=>res["first_name"], "lastname"=>res["last_name"], "phonenumber"=>res["phone_number"]}
+            id=res["person_id"]
+            {"id" => id, "firstname"=>res["first_name"], "lastname"=>res["last_name"], "phonenumber"=>get_phone_numbers(id)}
         else
             {}
+        end
+    end
+
+    def get_phone_numbers(id)
+        begin
+            res = @connection.exec_params("SELECT phone_number FROM phonenumber WHERE person_id=$1",[id])
+            res.map { |r| r["phone_number"] }
+        rescue
+            []
         end
     end
     
@@ -31,7 +41,12 @@ class Database
     def add_person(person)
         id = next_index
         begin
-            @connection.exec_params("INSERT INTO phonebook (person_id,first_name,last_name,phone_number) VALUES ($1,$2,$3,$4)",[id,person["firstname"],person["lastname"],person["phonenumber"]])
+            @connection.transaction do |conn|
+                conn.exec_params("INSERT INTO phonebook (person_id,first_name,last_name) VALUES ($1,$2,$3)",[id,escape(person["firstname"]),escape(person["lastname"])])
+                person["phonenumber"].each do |phonenumber|
+                    conn.exec_params("INSERT INTO phonenumber VALUES ($1,$2)",[escape(phonenumber),id])
+                end
+            end
         rescue
             id = 0
         end
@@ -44,12 +59,9 @@ class Database
     end
 
     def rows_to_hash(rows)
-        hash = {}
-        rows.each do |row|
-            hash[row["person_id"]]=result_to_hash(row)
+        rows.map do |row|
+            result_to_hash(row)
         end
-        return hash
-
     end
     
     def search_persons(criterias)
@@ -68,7 +80,7 @@ class Database
                 add_and = " AND"
             end
         end
-        res={}
+        res=[]
         res=@connection.exec_params(search,params) if params != []
         return rows_to_hash(res)
     end

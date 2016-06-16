@@ -2,6 +2,8 @@ require 'sinatra'
 require_relative 'phonebook'
 require_relative 'database'
 
+set :bind=>"0.0.0.0"
+
 database = Database.new
 phonebook = PhoneBook.new(database)
 

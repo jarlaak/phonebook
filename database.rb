@@ -43,12 +43,14 @@ class Database
         begin
             @connection.transaction do |conn|
                 conn.exec_params("INSERT INTO phonebook (person_id,first_name,last_name) VALUES ($1,$2,$3)",[id,escape(person["firstname"]),escape(person["lastname"])])
-                person["phonenumber"].each do |phonenumber|
-                    conn.exec_params("INSERT INTO phonenumber VALUES ($1,$2)",[escape(phonenumber),id])
+                if ( person.has_key?("phonenumber") )
+                    person["phonenumber"].each do |phonenumber|
+                        conn.exec_params("INSERT INTO phonenumber VALUES ($1,$2)",[escape(phonenumber),id])
+                    end
                 end
             end
         rescue
-            id = 0
+            return {}
         end
         return {"id"=>id}
     end

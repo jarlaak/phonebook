@@ -3,20 +3,50 @@ var phonebook = angular.module("phonebook",[]);
 phonebook.controller('phonebookCtrl',phonebookCtrl);
 
 function phonebookCtrl($scope,$http) {
-    console.log("kjhfskdjfhsjdkhfjsd");
-    $http.get("phonebook/person/search/").then(function(response) {
-        $scope.searchResults = response.data;
-	console.log("search " + response.data);
-    });
+    function updateView(){
+	$http.get("phonebook/person/search/").then(function(response) {
+            $scope.searchResults = response.data;
+	});
+    }
+    updateView();
     $scope.searchCriteria = "";
     $scope.update = function(searchCriteria) {
 	$http.get("phonebook/person/search/"+encodeURIComponent(searchCriteria)).then(function(response) {
             $scope.searchResults = response.data;
 	    document.getElementById("searchinput").style.color="black";
-	    console.log("search " + response.data);
 	},function(response){
 	    document.getElementById("searchinput").style.color="red";
-	    console.log('does not find');
-});
+	});
     };
+
+    $scope.addperson = function () {
+	$scope.person={};
+	$scope.person.firstname="";
+	$scope.person.lastname="";
+	$scope.person.phonenumber=[];
+	$scope.openperson();
+    }
+
+    $scope.addphonenumberline = function(){
+	$scope.person.phonenumber.push("");
+    }
+
+    $scope.closeperson = function() {
+	    document.getElementById("addpersoncontainer").style.display="none";
+    }
+
+    $scope.openperson = function() {
+	    document.getElementById("addpersoncontainer").style.display="inline";
+    }
+
+    
+    $scope.submitperson = function(person){
+	document.getElementById("addpersoncontainer").style.display="none";
+	$http.post("phonebook/person/",person).then(function(response) {
+            $scope.searchResults = response.data;
+	    $scope.closeperson();
+	    updateView();
+	},function(response){
+	});
+    }
 };

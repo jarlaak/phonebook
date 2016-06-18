@@ -6,13 +6,17 @@
   <title>Phonebook</title>
   <link rel="stylesheet" type="text/css" href="css/phonebook.css"/>
 </head>
-<body>
-  <div id="container" ng-app="phonebook"  ng-controller="phonebookCtrl">
+<body  ng-app="phonebook"  ng-controller="phonebookCtrl">
+  <div id="container">
     <div id="header">
       <h1 id="headername">Phonebook</h1>
-      <div id="searchcontainer">
-	<div id="searchemptyblock"></div>
-	<div id="searchfield"><input id="searchinput" type="text" ng-change="update(searchCriteria)" ng-model="searchCriteria" placeholder="Search" value=""></input> </div>
+      <div id="functionality">
+	<div id="addpersonbtn">
+	  <button ng-click="addperson()" id="addpersonbutton">Add Person</button>
+	</div>
+	<div id="searchcontainer">
+	  <input id="searchinput" type="text" ng-change="update(searchCriteria)" ng-model="searchCriteria" placeholder="Search" value=""></input>
+	</div>
       </div>
     </div>
     <div id="search">
@@ -40,6 +44,32 @@
 	  <div class="line"></div>
 	</div>
       </div>
+    </div>
+  </div>
+  <div id="addpersoncontainer">
+    <div id="addperson">
+      <form>
+	<div class="inputline">
+	  <div class="inputname">First Name: </div>
+	  <input class="adddata" type="text" ng-model="person.firstname">
+	</div>
+	<div class="inputline">
+	  <div class="inputname">Last Name: </div>
+	  <input class="adddata" type="text" ng-model="person.lastname">
+	</div>
+	<div>
+	  <div class="inputline" ng-repeat="(key,phonenumber) in person.phonenumber track by $index">
+	    <div class="inputline">
+	      <div class="inputname">Phone Number: </div>
+	      <input class="adddata" type="text" value="person.phonenumber[$index]" ng-model="person.phonenumber[$index]">
+	    </div>
+	</div>
+	  <div class="inputline">
+	    <button class="addphonenumber" ng-click="addphonenumberline()">Add Phone Number</button>
+	    <button class="closeperson" ng-click="closeperson()">Close</button>
+	    <button class="submitperson" ng-click="submitperson(person)">Submit Person</button>
+	  </div>
+      </form>
     </div>
   </div>
 </body>

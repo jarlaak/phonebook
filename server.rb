@@ -41,7 +41,7 @@ end
 
 def return_json(json)
     status = 200
-    status = 404 if json == "{}"
+    status = 404 if (json == "{}" || json == "[]" || json == "")
     [status,{"Content-Type" => " application/json"},json]
 end
 

@@ -71,13 +71,19 @@ class Database
         criterias.each do |criteria|
             case (criteria[:name].downcase)
             when "firstname"
-                search += "#{add_and} first_name LIKE $#{params.length+1}"
-                params << escape(criteria[:criteria].gsub('*','%'))
-                add_and = " AND"
+                if ( criteria.has_key?(:criteria) )
+                     params << escape(criteria[:criteria].gsub('*','%'))
+                     search += "#{add_and} first_name LIKE $#{params.length}"
+                     add_and = " AND"
+                end
             when "lastname"
-                search += "#{add_and} last_name LIKE $#{params.length+1}"
-                params << escape(criteria[:criteria].gsub('*','%'))
-                add_and = " AND"
+                if ( criteria.has_key?(:criteria) )
+                    params << escape(criteria[:criteria].gsub('*','%'))
+                    search += "#{add_and} last_name LIKE $#{params.length}"
+                    add_and = " AND"
+                end
+            else
+                return []
             end
         end
         res=[]

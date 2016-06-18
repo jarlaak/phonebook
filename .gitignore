@@ -1,2 +1,3 @@
+docker/html/*
 docker/src/*
 docker/phonebook.sql

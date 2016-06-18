@@ -30,6 +30,18 @@ post '/phonebook/person/' do
     body(id.to_s)
 end
 
+get '/' do
+    send_file('html/index.html')
+end
+
+get '/js/phonebook.js' do
+    send_file('html/js/phonebook.js')
+end
+
+get '/css/phonebook.css' do
+    send_file('html/css/phonebook.css')
+end
+
 get '*' do
     page_missing
 end

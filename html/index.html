@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+<script src="/js/phonebook.js"></script>
+<head>
+  <title>Phonebook</title>
+  <link rel="stylesheet" type="text/css" href="css/phonebook.css"/>
+</head>
+<body>
+  <div id="container" ng-app="phonebook"  ng-controller="phonebookCtrl">
+    <div id="header">
+      <h1 id="headername">Phonebook</h1>
+      <div id="searchcontainer">
+	<div id="searchemptyblock"></div>
+	<div id="searchfield"><input id="searchinput" type="text" ng-change="update(searchCriteria)" ng-model="searchCriteria" placeholder="Search" value=""></input> </div>
+      </div>
+    </div>
+    <div id="search">
+      <div id="results">
+	<div id="title">
+	  <div class="person">
+	    <div class="firstname">First Name</div>
+	    <div class="part2">
+	      <div class="lastname">Last Name</div>
+	      <div class="phonenumbers">
+		<div class="phonenumber">Phone Number</div>
+	      </div>
+	    </div>
+	    <div class="line"></div>
+	  </div>
+	</div>
+	<div class="person" ng-repeat="person in searchResults">
+	  <div class="firstname">{{person.firstname}}</div>
+	  <div class="part2">
+	    <div class="lastname">{{person.lastname}}</div>
+	    <div class="phonenumbers" ng-repeat="pn in person.phonenumber">
+	      <div class="phonenumber">{{pn}}</div>
+	    </div>
+	  </div>
+	  <div class="line"></div>
+	</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

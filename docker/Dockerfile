@@ -11,7 +11,7 @@ RUN apt-get install -y \
 RUN adduser --disabled-password phonebook && adduser phonebook postgres
 RUN /etc/init.d/postgresql start && su postgres -c 'createuser -d phonebook' && su phonebook -c 'createdb -E UTF8 phonebook -T template0' && su phonebook -c 'psql phonebook < /tmp/phonebook.sql' && /etc/init.d/postgresql stop
 COPY src/*.rb  /usr/lib/phonebook/
-COPY html/ /usr/lib/phonebook/html/
+COPY public/ /usr/lib/phonebook/public/
 COPY startphonebook.sh /usr/lib/phonebook/
 EXPOSE 4567
 ENTRYPOINT /usr/lib/phonebook/startphonebook.sh

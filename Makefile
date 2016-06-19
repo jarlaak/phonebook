@@ -1,7 +1,7 @@
 docker-devel: clean
 	mkdir -p docker/src
 	cp *.rb docker/src/
-	cp -R html/ docker/html/
+	cp -R public/ docker/public/
 	cp phonebook.sql docker/
 	cd docker && docker build -t phonebook .
 

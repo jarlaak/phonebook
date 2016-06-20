@@ -13,5 +13,5 @@ RUN /etc/init.d/postgresql start && su postgres -c 'createuser -d phonebook' && 
 COPY src/*.rb  /usr/lib/phonebook/
 COPY public/ /usr/lib/phonebook/public/
 COPY startphonebook.sh /usr/lib/phonebook/
-EXPOSE 4567
+EXPOSE 80
 ENTRYPOINT /usr/lib/phonebook/startphonebook.sh

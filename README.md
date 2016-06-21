@@ -29,6 +29,17 @@ button opens add person dialog, where first and last names and
 arbitrary phone numbers can be added. Main view lists all contacts and it can be filtered using search functionality. Currently there is two supported search terms
 `firstname` and `lastname`. Example all persons whose last name starts with letter 'P' can be found using search criteria `lastname=P*`. Character `*` can be used as wildcard and multiple search terms can be concatenated using character `;`. Example all persons whose first name starts with 'A' and last name with 'P' can be found using: `firstname=A*;lastname=P*`. Search functionality is case sensitive.
 
+## API
+Data from API and to API is json and its format is following
+`{"id": "1", "firstname":"Some first name","lastname":"Some last name", "phonenumber":["12345","9865"]}`, where
+
+- `id` is identification number of person, which can be used to retrieve person `/phonebook/person/{id}`
+- `firstname` is first name of the person
+- `lastname` is last name of the person
+- `phonenumber`is a list of phone numbers, where each number is a string presenting the phone number
+
+When adding new entry using `/phonebook/person/` fields `firstname` and `lastname` are mandatory. Field `id` is completely ignored and `phonenumber` is optional. Search functionality can be used in `/phonebook/person/search/{criteria}`, where empty criteria return all entries and criteria format is specified section **Web Interface**.
+
 ## Todo
 - Possibility to edit/remove contact.
 - Images to persons.
